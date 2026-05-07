@@ -1,0 +1,59 @@
+
+<!-- HOME, pantalla prinicial que ven los usuarios al abrir la aplicación) -->
+
+
+<!--Cabecera (header)-->
+<ion-header>
+  <ion-toolbar color = "primary">
+    <ion-title>TaskMate</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<!--Cuerpo General (content)-->
+<ion-content class="ion-padding">
+  <div class = "welcome-section">
+    <h2>¡Hola, Developer! 👋</h2>
+    <p>Tienes <strong>0 tareas</strong> pendientes hoy.</p>
+  </div>
+
+
+<!--Tarjetas (card)-->
+<ion-card>
+  <ion-card-header> <!--Cabecera de la tarjeta-->
+    <ion-card-title>Resumen del día</ion-card-title>
+  </ion-card-header>
+  
+  <ion-card-content> <!--Cuerpo de la tarjeta-->
+    
+    <ion-grid> <!--Cuadro que engloba a 1 componente-->
+
+      <ion-row> <!--Componente 1-->
+        <ion-col class="stat-col"> <!--Columna 1-->
+          <div class="stat-number">0</div>
+          <div class="stat-label">Pendientes</div>
+        </ion-col>
+        <ion-col class="stat-col"> <!--Columna 2-->
+          <div class="stat-number">0</div>
+          <div class="stat-label">Completadas</div>
+        </ion-col>
+      </ion-row>
+      
+    </ion-grid>
+  </ion-card-content>
+</ion-card>
+
+<!--Botón para la generación de una nueva tarea-->
+<ion-button expand="block" color="primary" class="ion-margin-top">
+  <ion-icon name="add" slot="start"></ion-icon>
+  Nueva Tarea
+</ion-button>
+
+<!--Botón para la generación de una nueva tarea pero en la esquina inferior
+izquierda, lo unico es que aqui hacemos uso de fab-->
+<ion-fab vertical="bottom" horizontal="end" slot="fixed">
+  <ion-fab-button color="primary">
+    <ion-icon name="add"></ion-icon>
+  </ion-fab-button>
+</ion-fab>
+
+</ion-content>

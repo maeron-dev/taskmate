@@ -1,0 +1,17 @@
+import { Component } from '@angular/core';
+import { IonHeader, IonToolbar, IonTitle, IonContent, IonAvatar, IonBadge, IonCard, IonCardHeader, IonCardSubtitle, IonCardContent, IonChip, IonLabel, IonList, IonItem, IonIcon } from '@ionic/angular/standalone';
+import { ExploreContainerComponent } from '../explore-container/explore-container.component';
+import { addIcons } from 'ionicons';
+import { school, calendar, clipboardOutline } from 'ionicons/icons';
+
+@Component({
+  selector: 'app-tab3',
+  templateUrl: 'tab3.page.html',
+  styleUrls: ['tab3.page.scss'],
+  imports: [IonHeader, IonToolbar, IonTitle, IonContent, ExploreContainerComponent, IonAvatar, IonBadge, IonCard, IonCardHeader, IonCardSubtitle, IonCardContent, IonChip, IonLabel, IonList, IonItem, IonIcon],
+})
+export class Tab3Page {
+  constructor() {
+    addIcons({ school, calendar, 'clipboard-outline': clipboardOutline });
+  }
+}

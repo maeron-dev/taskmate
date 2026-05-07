@@ -1,0 +1,52 @@
+<!--Pantalla de PERFIL, muestra información del usuario-->
+
+<ion-header>  <!--Cabecera Principal-->
+  <ion-toolbar>
+    <ion-title>Mi Perfil</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding"> <!--Cuerpo Principal-->
+  
+  <div class="profile-header"><!--Cabecera del perfil que define el avatar del usuario-->
+    <ion-avatar class="profile-avatar"> 
+      <img src="https://ui-avatars.com/api/?name=Ricardo+Martinez&background=6C63FF&color=fff&size=128"/>
+    </ion-avatar>
+    <h2>Ricardo Martínez</h2>
+    <p>2º DAM</p>
+    <ion-badge color="primary">2º DAM</ion-badge>
+  </div>
+
+  <ion-card> <!--Tarjeta-->
+    
+    <ion-card-header> <!--Cabecera de la tarjeta-->
+      <ion-card-subtitle>Stack tecnológico</ion-card-subtitle>
+    </ion-card-header>
+    
+    <ion-card-content> <!--Contenido de la tarjeta-->
+      <ion-chip color="primary"><ion-label>HTML/CSS</ion-label></ion-chip> <!--Elemento de la tarjeta-->
+      <ion-chip color="secondary"><ion-label>JavaScript</ion-label></ion-chip>
+      <ion-chip color="tertiary"><ion-label>Angular</ion-label></ion-chip>
+      <ion-chip><ion-label>Ionic</ion-label></ion-chip>
+    </ion-card-content>
+
+  </ion-card>
+
+  <ion-list> <!--Lista-->
+    <ion-item> <!--Elemento de la lista-->
+      <ion-icon name="school" slot="start" color="primary"></ion-icon>
+      <ion-label>
+        <h3>Centro</h3>
+        <p>IES La Puebla - Almería</p>
+      </ion-label>
+    </ion-item>
+    <ion-item>
+    <ion-icon name="calendar" slot="start" color="primary"></ion-icon>
+    <ion-label>
+      <h3>Curso</h3>
+      <p>2024/2025</p>
+    </ion-label>
+    </ion-item>
+  </ion-list>
+
+</ion-content>

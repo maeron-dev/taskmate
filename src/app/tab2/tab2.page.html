@@ -1,0 +1,31 @@
+<!-- tab2.page.html -->
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-title>Mis Tareas</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true" class="ion-padding">
+  <ion-header collapse="condense">
+    <ion-toolbar>
+      <ion-title size="large">Mis Tareas</ion-title>
+    </ion-toolbar>
+  </ion-header>
+
+  <!-- Lógica condicional para renderizar tareas o estado vacío -->
+  @if (tareas.length === 0) {
+    <div class="empty-state">
+      <ion-icon name="clipboard-outline" size="large" color="medium"></ion-icon>
+      <h2>No tienes tareas</h2>
+      <p>Añade una nueva tarea para empezar</p>
+    </div>
+  } @else {
+    <ion-list>
+      @for (tarea of tareas; track tarea) {
+        <ion-item>
+          <ion-label>{{ tarea }}</ion-label>
+        </ion-item>
+      }
+    </ion-list>
+  }
+</ion-content>
