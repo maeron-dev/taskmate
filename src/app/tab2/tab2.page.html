@@ -1,31 +1,51 @@
-<!-- tab2.page.html -->
 <ion-header [translucent]="true">
-  <ion-toolbar>
+  <ion-toolbar color="primary">
     <ion-title>Mis Tareas</ion-title>
   </ion-toolbar>
 </ion-header>
 
-<ion-content [fullscreen]="true" class="ion-padding">
-  <ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-title size="large">Mis Tareas</ion-title>
-    </ion-toolbar>
-  </ion-header>
+<ion-content [fullscreen]="true">
+  <!-- Barra de búsqueda -->
+  <ion-searchbar placeholder="Buscar tarea..." (ionInput)="filterTasks($event)"></ion-searchbar>
 
-  <!-- Lógica condicional para renderizar tareas o estado vacío -->
-  @if (tareas.length === 0) {
-    <div class="empty-state">
-      <ion-icon name="clipboard-outline" size="large" color="medium"></ion-icon>
-      <h2>No tienes tareas</h2>
-      <p>Añade una nueva tarea para empezar</p>
-    </div>
-  } @else {
-    <ion-list>
-      @for (tarea of tareas; track tarea) {
-        <ion-item>
-          <ion-label>{{ tarea }}</ion-label>
-        </ion-item>
-      }
-    </ion-list>
-  }
+  <!-- Filtros -->
+  <ion-segment [(ngModel)]="selectedFilter" (ionChange)="applyFilter()">
+    <ion-segment-button value="all"><ion-label>Todas</ion-label></ion-segment-button>
+    <ion-segment-button value="pending"><ion-label>Pendientes</ion-label></ion-segment-button>
+    <ion-segment-button value="done"><ion-label>Hechas</ion-label></ion-segment-button>
+  </ion-segment>
+
+  <ion-list>
+    <!-- Usamos @for con track por ID como pide el criterio de aceptación -->
+    @for (task of filteredTasks; track task.id) {
+      <ion-item button>
+        <!-- Checkbox funcional -->
+        <ion-checkbox slot="start" [(ngModel)]="task.completed" (ngModelChange)="onToggle(task)"></ion-checkbox>
+        
+        <ion-label (click)="goToDetail(task.id)">
+          <h2 [style.text-decoration]="task.completed ? 'line-through' : 'none'">{{ task.title }}</h2>
+          <p>{{ task.description }}</p>
+        </ion-label>
+
+        <!-- Badge con color según prioridad -->
+        <ion-badge slot="end" [color]="task.priority === 'alta' ? 'danger' : (task.priority === 'media' ? 'warning' : 'success')">
+          {{ task.priority }}
+        </ion-badge>
+      </ion-item>
+    } @empty {
+      <div class="ion-text-center ion-padding">
+        <ion-icon name="clipboard-outline" size="large" color="medium"></ion-icon>
+        <h3>No hay tareas</h3>
+        <p>Crea tu primera tarea con el botón +</p>
+      </div>
+    }
+  </ion-list>
+
+<!-- Busca tu ion-fab al final del archivo y añade el (click) -->
+<ion-fab vertical="bottom" horizontal="end" slot="fixed">
+  <ion-fab-button color="primary" (click)="openAddModal()"> <!-- Añadido (click) -->
+    <ion-icon name="add"></ion-icon>
+  </ion-fab-button>
+</ion-fab>
+
 </ion-content>
