@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms'; // Añadido para los filtros
-import { IonHeader, IonToolbar, IonTitle, IonContent, IonIcon, IonList, IonItem, IonLabel, IonSearchbar, IonSegment, IonSegmentButton, IonBadge, IonCheckbox, IonFab, IonFabButton } from '@ionic/angular/standalone';
+// Se añaden IonRefresher e IonRefresherContent a los componentesStandalone
+import { IonHeader, IonToolbar, IonTitle, IonContent, IonIcon, IonList, IonItem, IonLabel, IonSearchbar, IonSegment, IonSegmentButton, IonBadge, IonCheckbox, IonFab, IonFabButton, IonRefresher, IonRefresherContent } from '@ionic/angular/standalone';
 import { TaskService } from '../services/task.service';
 import { Task } from '../models/task.model';
 import { addIcons } from 'ionicons';
@@ -18,7 +19,8 @@ import { AddTaskModalComponent } from '../components/add-task-modal/add-task-mod
   imports: [
     FormsModule, IonHeader, IonToolbar, IonTitle, IonContent, IonIcon, 
     IonList, IonItem, IonLabel, IonSearchbar, IonSegment, 
-    IonSegmentButton, IonBadge, IonCheckbox, IonFab, IonFabButton
+    IonSegmentButton, IonBadge, IonCheckbox, IonFab, IonFabButton,
+    IonRefresher, IonRefresherContent // <-- Registrados para habilitar el refresco por arrastre
   ]
 })
 export class Tab2Page {
@@ -52,12 +54,16 @@ export class Tab2Page {
         title: data.title,
         description: data.description,
         priority: data.priority,
-        completed: false
+        category: data.category || 'personal',
+        dueDate: data.dueDate ? new Date(data.dueDate) : new Date(),
+        completed: false // <-- Agrega esta línea para satisfacer a TypeScript
       });
 
       // Refrescamos la lista
       this.tasks = this.taskService.getTasks();
       this.applyFilter();
+
+
 
       // Mostramos el mensaje de éxito (Toast)
       const toast = await this.toastCtrl.create({
@@ -74,6 +80,13 @@ export class Tab2Page {
   ionViewWillEnter() {
     this.tasks = this.taskService.getTasks();
     this.applyFilter();
+  }
+
+  // Ejecuta la actualización manual al arrastrar la interfaz hacia abajo
+  doRefresh(event: any) {
+    this.tasks = this.taskService.getTasks();
+    this.applyFilter();
+    event.target.complete(); // <-- Notifica fin de la operación ocultando el spinner animado
   }
 
   filterTasks(event: any) {

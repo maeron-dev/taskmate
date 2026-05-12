@@ -11,7 +11,7 @@
     <p>Tienes <strong>{{ stats.pending }} tareas</strong> pendientes hoy.</p>
   </div>
 
-  <!-- Tarjeta de Resumen -->
+  <!-- Tarjeta de Resumen Modificada sin eliminar estructura previa -->
   <ion-card>
     <ion-card-header>
       <ion-card-title>Resumen del día</ion-card-title>
@@ -20,19 +20,59 @@
       <ion-grid>
         <ion-row>
           <ion-col class="stat-col" style="text-align: center;">
-            <div class="stat-number" style="font-size: 1.5rem; font-weight: bold;">{{ stats.pending }}</div>
+            <div class="stat-number" style="font-size: 1.5rem; font-weight: bold;">{{ stats.total }}</div>
+            <div class="stat-label">Total</div>
+          </ion-col>
+          <ion-col class="stat-col" style="text-align: center;">
+            <div class="stat-number" style="font-size: 1.5rem; font-weight: bold; color: var(--ion-color-warning);">{{ stats.pending }}</div>
             <div class="stat-label">Pendientes</div>
           </ion-col>
           <ion-col class="stat-col" style="text-align: center;">
-            <div class="stat-number" style="font-size: 1.5rem; font-weight: bold;">{{ stats.completed }}</div>
+            <div class="stat-number" style="font-size: 1.5rem; font-weight: bold; color: var(--ion-color-success);">{{ stats.completed }}</div>
             <div class="stat-label">Completadas</div>
           </ion-col>
         </ion-row>
       </ion-grid>
+
+      <!-- Barra de progreso añadida (Criterio de Aceptación T03) con protección de división por cero -->
+      <div class="ion-margin-top">
+        <div style="display: flex; justify-content: space-between; margin-bottom: 4px;">
+          <small>Progreso del día</small>
+          <small>{{ stats.total > 0 ? ((stats.completed / stats.total) * 100 | number:'1.0-0') : 0 }}%</small>
+        </div>
+        <ion-progress-bar
+          [value]="stats.total > 0 ? stats.completed / stats.total : 0"
+          color="success">
+        </ion-progress-bar>
+      </div>
     </ion-card-content>
   </ion-card>
 
-  <!-- LISTA DE TAREAS REALES -->
+  <!-- SECCIÓN AÑADIDA: Tareas Urgentes (Reto Bonus T03) -->
+  <div class="ion-margin-top" *ngIf="urgentTasks.length > 0">
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; padding: 0 4px;">
+      <h3 style="font-weight: bold; margin: 0; display: flex; align-items: center; font-size: 1.1rem;">
+        <ion-icon name="alert-circle-outline" color="danger" style="margin-right: 6px;"></ion-icon>
+        Tareas Urgentes
+      </h3>
+      <ion-button fill="clear" size="small" (click)="goToTab2()" style="margin: 0; height: auto;">
+        Ver todas
+        <ion-icon slot="end" name="arrow-forward-outline"></ion-icon>
+      </ion-button>
+    </div>
+
+    <ion-list lines="none">
+      <ion-item *ngFor="let task of urgentTasks" class="ion-margin-bottom" style="--border-radius: 10px; border: 1px solid #eee; --background: var(--ion-color-step-50);">
+        <ion-label>
+          <h2>{{ task.title }}</h2>
+          <p>{{ task.description }}</p>
+        </ion-label>
+        <ion-badge slot="end" color="danger">ALTA</ion-badge>
+      </ion-item>
+    </ion-list>
+  </div>
+
+  <!-- LISTA DE TAREAS REALES ORIGINAL (Mantenida intacta) -->
   <h3 class="ion-margin-start">Mis Tareas</h3>
   <ion-list lines="none">
     <ion-item *ngFor="let task of tasks" class="ion-margin-bottom" style="--border-radius: 10px; border: 1px solid #eee;">
@@ -48,14 +88,14 @@
     </ion-item>
   </ion-list>
 
-  <!-- Botones de añadir -->
-  <ion-button expand="block" color="primary" class="ion-margin-top">
+  <!-- Botones de añadir originales mapeados al evento click -->
+  <ion-button expand="block" color="primary" class="ion-margin-top" (click)="openAddModal()">
     <ion-icon name="add" slot="start"></ion-icon>
     Nueva Tarea
   </ion-button>
 
   <ion-fab vertical="bottom" horizontal="end" slot="fixed">
-    <ion-fab-button color="primary">
+    <ion-fab-button color="primary" (click)="openAddModal()">
       <ion-icon name="add"></ion-icon>
     </ion-fab-button>
   </ion-fab>

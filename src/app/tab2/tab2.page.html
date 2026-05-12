@@ -5,10 +5,15 @@
 </ion-header>
 
 <ion-content [fullscreen]="true">
-  <!-- Barra de búsqueda -->
+  <!-- Pull-to-refresh añadido (Criterio de Aceptación T03) -->
+  <ion-refresher slot="fixed" (ionRefresh)="doRefresh($event)">
+    <ion-refresher-content pullingText="Arrastra para actualizar..." refreshingSpinner="crescent"></ion-refresher-content>
+  </ion-refresher>
+
+  <!-- Barra de búsqueda original -->
   <ion-searchbar placeholder="Buscar tarea..." (ionInput)="filterTasks($event)"></ion-searchbar>
 
-  <!-- Filtros -->
+  <!-- Filtros originales -->
   <ion-segment [(ngModel)]="selectedFilter" (ionChange)="applyFilter()">
     <ion-segment-button value="all"><ion-label>Todas</ion-label></ion-segment-button>
     <ion-segment-button value="pending"><ion-label>Pendientes</ion-label></ion-segment-button>

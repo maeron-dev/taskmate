@@ -6,4 +6,5 @@ export interface Task {
   completed: boolean;        // ¿Está terminada? true/false
   createdAt: Date;           // Fecha de creación
   category?: string;         // Categoría (opcional)
+  dueDate: Date | string;
 }

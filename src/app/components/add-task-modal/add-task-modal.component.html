@@ -10,26 +10,72 @@
 </ion-header>
 
 <ion-content class="ion-padding">
-  <ion-item>
-    <ion-label position="stacked">Título *</ion-label>
-    <ion-input [(ngModel)]="title" placeholder="¿Qué hay que hacer?" type="text"></ion-input>
-  </ion-item>
+  <form [formGroup]="taskForm">
+    
+    <!-- Título -->
+    <ion-item [class.ion-invalid]="isFieldInvalid('title')" [class.ion-touched]="taskForm.get('title')?.touched">
+      <ion-label position="stacked">Título *</ion-label>
+      <ion-input formControlName="title" placeholder="¿Qué hay que hacer?" type="text"></ion-input>
+    </ion-item>
+    <!-- Mensaje de error visible garantizado para Título -->
+    <div *ngIf="isFieldInvalid('title')" style="color: var(--ion-color-danger); font-size: 12px; padding-left: 16px; margin-top: 5px;">
+      {{ titleError }}
+    </div>
 
-  <ion-item class="ion-margin-top">
-    <ion-label position="stacked">Descripción</ion-label>
-    <ion-textarea [(ngModel)]="description" rows="3" placeholder="Detalles opcionales..."></ion-textarea>
-  </ion-item>
+    <!-- Descripción -->
+    <ion-item class="ion-margin-top" [class.ion-invalid]="isFieldInvalid('description')" [class.ion-touched]="taskForm.get('description')?.touched">
+      <ion-label position="stacked">Descripción</ion-label>
+      <ion-textarea formControlName="description" rows="3" placeholder="Detalles opcionales..."></ion-textarea>
+    </ion-item>
+    <!-- Mensaje de error visible garantizado para Descripción -->
+    <div *ngIf="isFieldInvalid('description')" style="color: var(--ion-color-danger); font-size: 12px; padding-left: 16px; margin-top: 5px;">
+      Máximo 500 caracteres
+    </div>
 
-  <ion-item class="ion-margin-top">
-    <ion-label>Prioridad</ion-label>
-    <ion-select [(ngModel)]="priority" interface="action-sheet">
-      <ion-select-option value="alta">🔴 Alta</ion-select-option>
-      <ion-select-option value="media">🟡 Media</ion-select-option>
-      <ion-select-option value="baja">🟢 Baja</ion-select-option>
-    </ion-select>
-  </ion-item>
+    <!-- Prioridad -->
+    <ion-item class="ion-margin-top">
+      <ion-label>Prioridad</ion-label>
+      <ion-select formControlName="priority" interface="action-sheet">
+        <ion-select-option value="alta">🔴 Alta</ion-select-option>
+        <ion-select-option value="media">🟡 Media</ion-select-option>
+        <ion-select-option value="baja">🟢 Baja</ion-select-option>
+      </ion-select>
+    </ion-item>
 
-  <ion-button expand="block" class="ion-margin-top" (click)="save()" [disabled]="!title.trim()">
-    Guardar Tarea
-  </ion-button>
+    <!-- Categoría -->
+    <ion-item class="ion-margin-top">
+      <ion-label>Categoría</ion-label>
+      <ion-select formControlName="category">
+        <ion-select-option value="personal">Personal</ion-select-option>
+        <ion-select-option value="trabajo">Trabajo</ion-select-option>
+        <ion-select-option value="estudio">Estudio</ion-select-option>
+      </ion-select>
+    </ion-item>
+
+    <!-- Fecha Límite (Reto Bonus) -->
+    <ion-item class="ion-margin-top" [class.ion-invalid]="isFieldInvalid('dueDate')" [class.ion-touched]="taskForm.get('dueDate')?.touched" id="open-date-picker">
+      <ion-label>Fecha Límite *</ion-label>
+      <ion-text slot="end">{{ taskForm.get('dueDate')?.value | date:'dd/MM/yyyy' }}</ion-text>
+    </ion-item>
+    <!-- Mensaje de error visible garantizado para Fecha Límite -->
+    <div *ngIf="isFieldInvalid('dueDate')" style="color: var(--ion-color-danger); font-size: 12px; padding-left: 16px; margin-top: 5px;">
+      {{ dateError }}
+    </div>
+    
+    <ion-modal trigger="open-date-picker" presentation="popover">
+      <ng-template>
+        <ion-datetime
+          presentation="date"
+          formControlName="dueDate"
+          [min]="minSelectableDate"
+          size="cover">
+        </ion-datetime>
+      </ng-template>
+    </ion-modal>
+
+    <!-- Botón Guardar -->
+    <ion-button expand="block" class="ion-margin-top" (click)="save()" [disabled]="taskForm.invalid">
+      Guardar Tarea
+    </ion-button>
+  </form>
 </ion-content>
