@@ -7,4 +7,5 @@ export interface Task {
   createdAt: Date;           // Fecha de creación
   category?: string;         // Categoría (opcional)
   dueDate: Date | string;
+  created_at?: Date
 }

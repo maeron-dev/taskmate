@@ -34,14 +34,33 @@ export class TaskDetailPage implements OnInit {
   ngOnInit() {
     // Obtenemos el ID de la URL
     const id = parseInt(this.route.snapshot.paramMap.get('id') || '0');
-    this.task = this.taskService.getTaskById(id);
+    if (id) {
+      this.loadTask(id);
+    }
+  }
+
+  // Carga asíncrona mediante suscripción al Observable de la API
+  loadTask(id: number) {
+    this.taskService.getTaskById(id).subscribe({
+      next: (data: any) => {
+        // Manejo seguro: si la API devuelve un array o un objeto estructurado con .data
+        this.task = data.data ? data.data[0] : (Array.isArray(data) ? data[0] : data);
+      },
+      error: () => {
+        this.router.navigate(['/tabs/tab2']);
+      }
+    });
   }
 
   toggleComplete() {
     if (this.task) {
-      this.taskService.toggleComplete(this.task.id);
-      // Refrescamos la referencia para que la vista se actualice
-      this.task = this.taskService.getTaskById(this.task.id);
+      // Pasamos el ID y su estado booleano actual requerido por la nueva firma asíncrona del servicio
+      this.taskService.toggleComplete(this.task.id, this.task.completed).subscribe({
+        next: () => {
+          // Volvemos a solicitar la información actualizada al servidor MySQL
+          if (this.task) this.loadTask(this.task.id);
+        }
+      });
     }
   }
 
@@ -56,8 +75,12 @@ export class TaskDetailPage implements OnInit {
           role: 'destructive', 
           handler: () => {
             if (this.task) {
-              this.taskService.deleteTask(this.task.id);
-              this.router.navigate(['/tabs/tab2']); // Volvemos a la lista
+              // Eliminación física asíncrona en la base de datos MySQL
+              this.taskService.deleteTask(this.task.id).subscribe({
+                next: () => {
+                  this.router.navigate(['/tabs/tab2']); // Volvemos a la lista al terminar
+                }
+              });
             }
           } 
         }

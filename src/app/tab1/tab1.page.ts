@@ -18,7 +18,7 @@ import { AddTaskModalComponent } from '../components/add-task-modal/add-task-mod
   imports: [
     CommonModule, DecimalPipe, // Necesario para usar directivas como *ngFor y filtros numéricos
     IonHeader, IonToolbar, IonTitle, IonContent, IonCard, IonCardHeader, 
-    IonCardTitle, IonCardContent, IonGrid, IonRow, IonCol, IonButton, 
+    IonCardTitle, IonCardContent, IonGrid, IonRow, IonCol, IonButton, // <-- Corregido: se elimina "Mesh:"
     IonIcon, IonFab, IonFabButton, IonList, IonItem, IonLabel, IonBadge,
     IonProgressBar // Inyectado para la barra de progreso
   ],
@@ -42,13 +42,23 @@ export class Tab1Page {
 
   // Función para cargar los datos del servicio modificada sin borrar contenido previo
   refreshData() {
-    this.tasks = this.taskService.getTasks();
-    this.stats = this.taskService.getStats();
-    
-    // Lógica Reto Bonus: Tareas de prioridad alta pendientes limitadas a 3 elementos
-    this.urgentTasks = this.tasks
-      .filter(t => !t.completed && t.priority === 'alta')
-      .slice(0, 3);
+    // Sincronización asíncrona de las tareas mediante Observables
+    this.taskService.getTasks().subscribe({
+      next: (data) => {
+        this.tasks = data;
+        // Lógica Reto Bonus: Tareas de prioridad alta pendientes limitadas a 3 elementos
+        this.urgentTasks = this.tasks
+          .filter(t => !t.completed && t.priority === 'alta')
+          .slice(0, 3);
+      }
+    });
+
+    // Sincronización asíncrona de los contadores analíticos desde MySQL
+    this.taskService.getStats().subscribe({
+      next: (serverStats) => {
+        this.stats = serverStats;
+      }
+    });
   }
 
   // Función añadida para abrir el modal desde esta pantalla principal
@@ -66,12 +76,13 @@ export class Tab1Page {
         description: data.description,
         priority: data.priority,
         category: data.category || 'personal',
-        dueDate: data.dueDate ? new Date(data.dueDate) : new Date(),
-        completed: false
+        dueDate: data.dueDate ? new Date(data.dueDate) : new Date()
+      }).subscribe({
+        next: () => {
+          // Refrescamos al instante los datos de esta pantalla
+          this.refreshData();
+        }
       });
-      
-      // Refrescamos al instante los datos de esta pantalla
-      this.refreshData();
     }
   }
 
